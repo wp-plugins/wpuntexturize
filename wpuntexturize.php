@@ -1,7 +1,12 @@
 <?php
+/**
+ * @package wpuntexturize
+ * @author Scott Reilly
+ * @version 1.1
+ */
 /*
 Plugin Name: wpuntexturize
-Version: 1.0.1
+Version: 1.1
 Plugin URI: http://coffee2code.com/wp-plugins/wpuntexturize
 Author: Scott Reilly
 Author URI: http://coffee2code.com
@@ -40,9 +45,22 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRA
 IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-function wpuntexturize($text) {
-	$char_codes = array('&#8216;', '&#8217;', '&#8220;', '&#8221;');
-	$replacements = array("'", "'", '"', '"');
+/**
+ * Prevent WordPress from displaying single and double quotation marks as
+ * their curly alternatives.
+ *
+ * Despite the unfortunately misleading name, this plugin is NOT the antithesis
+ * of WordPress's wptexturize() function.  This ONLY prevents WordPress from
+ * making HTML entity code substitutions of single and double quotation marks
+ * with their curly alternatives and does NOT prevent wptexturize() from making
+ * any other character and string substitutions.
+ *
+ * @param string $text The text to have quotation characters reverted from HTML entities to plaintext
+ * @return string The converted text
+ */
+function wpuntexturize( $text ) {
+	$char_codes = array('&#8216;', '&#8217;', '&#8220;', '&#8221;', '&#8242;', '&#8243;');
+	$replacements = array("'", "'", '"', '"', "'", '"');
 	return str_replace($char_codes, $replacements, $text);
 } // end wpuntexturize()
 
