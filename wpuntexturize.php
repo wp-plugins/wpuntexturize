@@ -2,39 +2,30 @@
 /**
  * @package wpuntexturize
  * @author Scott Reilly
- * @version 1.1
+ * @version 1.4.1
  */
 /*
 Plugin Name: wpuntexturize
-Version: 1.1
+Version: 1.4.1
 Plugin URI: http://coffee2code.com/wp-plugins/wpuntexturize
 Author: Scott Reilly
 Author URI: http://coffee2code.com
 Description: Prevent WordPress from displaying single and double quotation marks as their curly alternatives.
 
-Despite the unfortunately misleading name, this plugin is NOT the antithesis of WordPress's wptexturize() function.
-This ONLY prevents WordPress from making HTML entity code substitutions of single and double quotation marks with 
-their curly alternatives and does NOT prevent wptexturize() from making any other character and string substitutions. 
+Compatible with WordPress 1.5+, 2.0+, 2.1+, 2.2+, 2.3+, 2.5+, 2.6+, 2.7+, 2.8+, 2.9+, 3.0+, 3.1+, 3.2+.
 
-Compatible with WordPress 1.5+, 2.0+, 2.1+, 2.2+, 2.3+, 2.5+, 2.6+, 2.7+, 2.8+, 2.9+.
-
-=>> Read the accompanying readme.txt file for more information.  Also, visit the plugin's homepage
-=>> for more information and the latest updates
-
-Installation:
-
-1. Download the file http://coffee2code.com/wp-plugins/wpuntexturize.zip and unzip it into your 
-/wp-content/plugins/ directory (or install via the built-in WordPress plugin installer).
-2. Activate the plugin through the 'Plugins' admin menu in WordPress
+=>> Read the accompanying readme.txt file for instructions and documentation.
+=>> Also, visit the plugin's homepage for additional information and updates.
+=>> Or visit: http://wordpress.org/extend/plugins/wpuntexturize/
 
 */
 
 /*
-Copyright (c) 2004-2010 by Scott Reilly (aka coffee2code)
+Copyright (c) 2004-2011 by Scott Reilly (aka coffee2code)
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation 
-files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, 
-modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the 
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
+files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
+modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
 Software is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -45,6 +36,8 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRA
 IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+
+if ( !function_exists( 'c2c_wpuntexturize' ) ) :
 /**
  * Prevent WordPress from displaying single and double quotation marks as
  * their curly alternatives.
@@ -55,20 +48,49 @@ IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * with their curly alternatives and does NOT prevent wptexturize() from making
  * any other character and string substitutions.
  *
- * @param string $text The text to have quotation characters reverted from HTML entities to plaintext
+ * @param string $text The text to have quotation characters reverted from HTML entities to plain-text
  * @return string The converted text
  */
-function wpuntexturize( $text ) {
-	$char_codes = array('&#8216;', '&#8217;', '&#8220;', '&#8221;', '&#8242;', '&#8243;');
-	$replacements = array("'", "'", '"', '"', "'", '"');
-	return str_replace($char_codes, $replacements, $text);
-} // end wpuntexturize()
+function c2c_wpuntexturize( $text ) {
+	$char_codes = array( '&#8216;', '&#8217;', '&#8220;', '&#8221;', '&#8242;', '&#8243;' );
+	$replacements = array( "'", "'", '"', '"', "'", '"' );
+	return str_replace( $char_codes, $replacements, $text );
+}
+add_action( 'c2c_wpuntexturize', 'c2c_wpuntexturize' );
+endif;
 
-add_filter('comment_text', 'wpuntexturize', 11);
-add_filter('single_post_title', 'wpuntexturize', 11);
-add_filter('the_title', 'wpuntexturize', 11);
-add_filter('the_content', 'wpuntexturize', 11);
-add_filter('the_excerpt', 'wpuntexturize', 11);
-add_filter('widget_text', 'wpuntexturize', 11);
+
+if ( !function_exists( 'c2c_init_wpuntexturize' ) ) :
+/**
+ * Initialize wpuntexturize, primarily to register it against filters
+ *
+ * @return void
+ */
+function c2c_init_wpuntexturize() {
+	$filters = (array) apply_filters( 'wpuntexturize_filters', array(
+	 'comment_author', 'term_name', 'link_name', 'link_description', 'link_notes', 'bloginfo', 'wp_title', 'widget_title',
+	 'single_post_title', 'single_cat_title', 'single_tag_title', 'single_month_title', 'nav_menu_attr_title', 'nav_menu_description',
+	 'term_description', 'the_title', 'the_content', 'the_excerpt', 'comment_text', 'list_cats', 'widget_text' ) );
+	foreach( $filters as $filter )
+		add_filter( $filter, 'c2c_wpuntexturize', 11 );
+}
+endif;
+add_action( 'init', 'c2c_init_wpuntexturize' );
+
+
+if ( !function_exists( 'wpuntexturize' ) ) :
+/**
+ * Prevent WordPress from displaying single and double quotation marks as
+ * their curly alternatives.
+ *
+ * @since 1.0
+ * @deprecated 1.4 Use c2c_wpuntexturize() instead
+ */
+function wpuntexturize( $text ) {
+	_deprecated_function( 'wpuntexturize', '1.4', 'c2c_wpuntexturize' );
+	return c2c_wpuntexturize( $text );
+}
+add_action( 'wpuntexturize', 'wpuntexturize' ); // Deprecated
+endif;
 
 ?>
