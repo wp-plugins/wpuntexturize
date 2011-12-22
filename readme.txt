@@ -167,6 +167,9 @@ function more_wpuntexturize_filters( $filters ) {
 
 == Upgrade Notice ==
 
+= 1.4.2 =
+Trivial update: noted compatibility through WP 3.3+
+
 = 1.4.1 =
 Trivial update: noted compatibility through WP 3.2+ and fixed link in description in readme.txt
 
