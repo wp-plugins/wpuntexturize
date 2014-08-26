@@ -3,26 +3,13 @@
 class WPUntexturize_Test extends WP_UnitTestCase {
 
 	/**
-	 * Loads post as if in loop.
-	 *
-	 * @param int $post_id Post ID.
-	 */
-	function load_post( $post_id ) {
-		global $post;
-		$post = get_post( $post_id );
-		setup_postdata( $post );
-		return $post;
-	}
-
-
-	/**
 	 *
 	 * DATA PROVIDERS
 	 *
 	 */
 
 
-	function strings_containing_non_curly_quotes() {
+	static function strings_containing_non_curly_quotes() {
 		return array(
 			array( '"This string is double-quoted."' ),
 			array( "'This string is single-quoted.'" ),
@@ -33,7 +20,7 @@ class WPUntexturize_Test extends WP_UnitTestCase {
 		);
 	}
 
-	function strings_containing_curly_quotes() {
+	static function strings_containing_curly_quotes() {
 		return array(
 			array( array( '"This string is double-quoted."', '&#8220;This string is double-quoted.&#8221;' ) ),
 			array( array( "'This string is single-quoted.'", "&#8216;This string is single-quoted.&#8217;" ) ),
@@ -44,12 +31,12 @@ class WPUntexturize_Test extends WP_UnitTestCase {
 		);
 	}
 
-	function default_filters() {
+	static function default_filters() {
 		$filters = c2c_wpuntexturize_get_default_filters();
 		return array_map( function( $x)  { return array( $x ); }, $filters );
 	}
 
-	function char_codes() {
+	static function char_codes() {
 		return array(
 			array( array( "'", '&#8216;' ) ),
 			array( array( "'", '&#8217;' ) ),
